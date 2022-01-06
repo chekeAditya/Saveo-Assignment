@@ -1,14 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2"
     tools:context=".ui.fragments.MovieDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMovieReview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#215673"
+        app:layout_constraintBottom_toTopOf="@+id/viewMiddle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/vBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_20"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_baseline_arrow_back_ios_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvMovieHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Movie"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_20"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/vBack"
+            app:layout_constraintTop_toTopOf="@id/vBack" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardMovieThumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_30"
+            android:elevation="@dimen/dp_40"
+            app:cardCornerRadius="@dimen/dp_20"
+            app:cardMaxElevation="@dimen/dp_20"
+            app:layout_constraintStart_toStartOf="@id/vBack"
+            app:layout_constraintTop_toBottomOf="@id/vBack">
+
+
+            <ImageView
+                android:id="@+id/ivMovieThumbnail"
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="@dimen/dp_180"
+                android:scaleType="centerCrop"
+                android:transitionName="image_transition" />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/tvMovieName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="The hateful Eight"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintStart_toEndOf="@id/cardMovieThumbnail"
+            app:layout_constraintTop_toBottomOf="@id/tvMovieHeader" />
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="R | 3h 7min | 30 Dec,2015"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/tvMovieName"
+            app:layout_constraintTop_toBottomOf="@+id/tvMovieName" />
+
+
+        <RatingBar
+            android:id="@+id/starRatingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:numStars="5"
+            app:layout_constraintStart_toStartOf="@+id/tvTime"
+            app:layout_constraintTop_toBottomOf="@+id/tvRatings" />
+
+        <TextView
+            android:id="@+id/tvStarRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_5"
+            android:textColor="#F4D03F"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/starRatingBar"
+            app:layout_constraintTop_toBottomOf="@+id/tvRatings" />
+
+        <TextView
+            android:id="@+id/tvRatings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_40"
+            android:text="Rating : "
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/tvTime"
+            app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+
+        <TextView
+            android:id="@+id/tvReview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Reviews : 10"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@id/tvRatings"
+            app:layout_constraintTop_toBottomOf="@+id/starRatingBar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/viewMiddle"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardBookNow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_30"
+        android:elevation="@dimen/dp_40"
+        app:cardCornerRadius="@dimen/dp_20"
+        app:cardMaxElevation="@dimen/dp_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="40sp"
+            android:paddingTop="@dimen/sp_15"
+            android:paddingEnd="@dimen/dp_40"
+            android:paddingBottom="@dimen/sp_15"
+            android:text="BOOK NOW"
+            android:textColor="@color/black" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/clMovieReview">
+
+        <TextView
+            android:id="@+id/tvSysnopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginTop="@dimen/sp_15"
+            android:text="Synopsis"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSynopsisData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_10"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/tvSysnopsis" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
