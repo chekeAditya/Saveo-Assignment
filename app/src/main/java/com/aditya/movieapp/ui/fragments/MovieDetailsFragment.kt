@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.aditya.movieapp.R
 import com.aditya.movieapp.databinding.FragmentMovieDetailsBinding
 import com.aditya.movieapp.extras.Constants.MOVIE_URL
@@ -31,23 +32,25 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         resultModel = arguments?.getSerializable("resultModel") as ResultModel
-        Glide.with(detailsBinding.ivMovieThumbnail).load(MOVIE_URL + resultModel.posterPath)
-            .into(detailsBinding.ivMovieThumbnail)
+
         detailsBinding.apply {
-            tvMovieName.text = resultModel.originalTitle
-            tvTime.text = resultModel.releaseDate
-            tvStarRating.visibility = View.VISIBLE
-            starRatingBar.visibility = View.VISIBLE
-            tvSynopsisData.text = resultModel.overview
-            starRatingBar.visibility = View.VISIBLE
-            tvStarRating.text = resultModel.voteAverage.toString()
-            starRatingBar.rating = resultModel.voteAverage.toString().toFloat() / 2
-            tvRatings.text = "Rating: ${resultModel.voteAverage.toString()}"
-            tvReview.text = "Popularity: ${resultModel.popularity.toString()}"
-            tvGenre1.visibility = View.VISIBLE
-            tvGenre1.text = "comedy"
-            tvGenre2.visibility = View.VISIBLE
-            tvGenre2.text = "adventure"
+            resultModel.apply {
+                Glide.with(ivMovieThumbnail).load(MOVIE_URL + posterPath)
+                    .into(ivMovieThumbnail)
+                tvMovieName.text = originalTitle
+                tvTime.text = releaseDate
+                tvSynopsisData.text = overview
+                starRatingBar.rating = voteAverage.toString().toFloat() / 2
+                tvRatings.text = "Rating: ${voteAverage.toString()}"
+                tvReview.text = "Popularity: ${popularity.toString()}"
+                tvGenre1.text = "comedy"
+                tvGenre2.text = "adventure"
+                tvGenre3.text = "romance"
+                vBack.setOnClickListener {
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_movieDetailsFragment_to_homeFragment)
+                }
+            }
         }
     }
 }

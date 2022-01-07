@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aditya.movieapp.R
 import com.aditya.movieapp.databinding.FragmentHomeBinding
+import com.aditya.movieapp.local.Status
 import com.aditya.movieapp.local.interfaces.OnCardClicked
 import com.aditya.movieapp.local.responses.ResultModel
+import com.aditya.movieapp.ui.adapter.MovieAdapter
 import com.aditya.movieapp.ui.adapter.NewMovieAdapter
 import com.aditya.movieapp.viewmodels.AppViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,8 +33,9 @@ class HomeFragment : Fragment(), OnCardClicked {
 
     val viewModel: AppViewModel by viewModels()
     private lateinit var homeBinding: FragmentHomeBinding
-    lateinit var movieAdapter: NewMovieAdapter
-    lateinit var newMovieAdapter: NewMovieAdapter
+    lateinit var movieAdapter: MovieAdapter
+    private var emptyList = emptyList<ResultModel>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,11 +48,8 @@ class HomeFragment : Fragment(), OnCardClicked {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeBinding.shimmerFrameLayout.startShimmerAnimation()
         setAdapter()
-        setNewMoviesRecycler()
         viewModel.getMovieResponse().observe(viewLifecycleOwner, Observer {
-            shimmerDisplay()
             it?.let {
                 CoroutineScope(Dispatchers.IO).launch {
                     movieAdapter.submitData(it)
@@ -56,51 +57,35 @@ class HomeFragment : Fragment(), OnCardClicked {
             }
         })
 
-        viewModel.getMovieResponse().observe(viewLifecycleOwner, Observer {
-            shimmerDisplay()
-            it?.let {
-                CoroutineScope(Dispatchers.IO).launch {
-                    newMovieAdapter.submitData(it)
+        viewModel.getResponseFromAPI(1).observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+                Status.ERROR ->{
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                }
+
+                Status.SUCCESS ->{
+                    emptyList = it.data?.resultModels as ArrayList<ResultModel>
+                    val adaptor = NewMovieAdapter(emptyList,this)
+                    homeBinding.rvTopMovies.adapter = adaptor
                 }
             }
         })
+
     }
 
     private fun setAdapter() {
-        movieAdapter = NewMovieAdapter(this)
+        movieAdapter = MovieAdapter(this)
         homeBinding.rvMovies.apply {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(context, 3)
         }
     }
 
-    private fun setNewMoviesRecycler() {
-        newMovieAdapter = NewMovieAdapter(this)
-        homeBinding.rvTopMovies.apply {
-            adapter = newMovieAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, true)
-        }
-    }
 
-    override fun onCardClicked(resultModel: ResultModel, imageView: ImageView) {
+    override fun onCardClicked(resultModel: ResultModel) {
         val bundle = Bundle()
         bundle.putSerializable("resultModel", resultModel)
-        val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            requireActivity(),
-            imageView,
-            ViewCompat.getTransitionName(imageView)!!
-        )
         Navigation.findNavController(requireView())
             .navigate(R.id.action_homeFragment_to_movieDetailsFragment, bundle)
-    }
-
-    private fun shimmerDisplay() {
-        homeBinding.apply {
-            shimmerFrameLayout.stopShimmerAnimation()
-            shimmerFrameLayout.visibility = View.GONE
-            rvMovies.visibility = View.VISIBLE
-            rvTopMovies.visibility = View.VISIBLE
-            tvNowShowing.visibility = View.VISIBLE
-        }
     }
 }

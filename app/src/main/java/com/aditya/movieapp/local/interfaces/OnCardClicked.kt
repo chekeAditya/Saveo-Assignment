@@ -5,6 +5,6 @@ import com.aditya.movieapp.local.responses.ResultModel
 
 interface OnCardClicked {
 
-    fun onCardClicked(resultModel: ResultModel, imageView: ImageView)
+    fun onCardClicked(resultModel: ResultModel)
 
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.aditya.movieapp.R
 import com.aditya.movieapp.databinding.ItemLayoutBinding
+import com.aditya.movieapp.databinding.ItemLayoutGirdBinding
 import com.aditya.movieapp.extras.Constants
 import com.aditya.movieapp.local.interfaces.OnCardClicked
 import com.aditya.movieapp.local.responses.ResultModel
@@ -28,12 +29,12 @@ class MovieAdapter(val onCardClicked: OnCardClicked) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
-        val itemLayoutBinding: ItemLayoutBinding =
+        val itemLayoutGirdBinding: ItemLayoutGirdBinding =
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.item_layout, parent, false
+                R.layout.item_layout_gird, parent, false
             )
-        return MovieHolder(itemLayoutBinding, onCardClicked)
+        return MovieHolder(itemLayoutGirdBinding, onCardClicked)
 
     }
 
@@ -51,19 +52,22 @@ class MovieAdapter(val onCardClicked: OnCardClicked) :
 }
 
 class MovieHolder(
-    private val itemLayoutBinding: ItemLayoutBinding,
+    private val itemLayoutGirdBinding: ItemLayoutGirdBinding,
     val onCardClicked: OnCardClicked
-) : RecyclerView.ViewHolder(itemLayoutBinding.root) {
+) : RecyclerView.ViewHolder(itemLayoutGirdBinding.root) {
 
     fun setData(resultModel: ResultModel) {
 
-        Glide.with(itemLayoutBinding.ivMovieCard).load(Constants.MOVIE_URL + resultModel.posterPath)
-            .placeholder(ColorDrawable(getRandomColor()))
-            .into(itemLayoutBinding.ivMovieCard)
+        itemLayoutGirdBinding.apply {
+            Glide.with(ivMovieCard).load(Constants.MOVIE_URL + resultModel.posterPath)
+                .placeholder(ColorDrawable(getRandomColor()))
+                .into(ivMovieCard)
 
-        itemLayoutBinding.ivMovieCard.setOnClickListener {
-            onCardClicked.onCardClicked(resultModel,itemLayoutBinding.ivMovieCard)
+            ivMovieCard.setOnClickListener {
+                onCardClicked.onCardClicked(resultModel)
+            }
         }
+
     }
 
     fun getRandomColor(): Int {
